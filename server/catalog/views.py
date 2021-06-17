@@ -1,9 +1,8 @@
-
 from rest_framework.generics import ListAPIView
 
+from .filters import CarFilterSet
 from .models import Car
 from .serializers import CarSerializer
-from .filters import CarFilterSet
 
 
 class CarsView(ListAPIView):
