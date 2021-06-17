@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+
+  database:
+    container_name: car-database
+    environment:
+      - POSTGRES_DB=car
+      - POSTGRES_USER=car
+      - POSTGRES_PASSWORD=car
+    image: postgres:13-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - car-database:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+    container_name: car-server
+    depends_on:
+      - database
+    environment:
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=car
+      - SQL_USER=car
+      - SQL_PASSWORD=car
+      - SQL_HOST=car-database
+      - SQL_PORT=5432
+    command: [ "bash", "start.sh" ]
+    ports:
+      - 8003:8000
+    volumes:
+      - ./server:/usr/src/app
+volumes:
+  car-database:
