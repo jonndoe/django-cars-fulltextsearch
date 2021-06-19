@@ -141,7 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/staticfiles/"
-STATIC_ROOT = Path(BASE_DIR / 'static')
+STATIC_ROOT = Path(BASE_DIR / "static")
 
 REST_FRAMEWORK = {
     # django-filter is a powerful tool used for filtering Django QuerySets
@@ -152,7 +152,8 @@ REST_FRAMEWORK = {
 def custom_show_toolbar(request):
     return bool(DEBUG)
 
+
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": custom_show_toolbar}
 
 # set mode to debug while testing
-TESTING_MODE = 'test' in sys.argv
+TESTING_MODE = "test" in sys.argv

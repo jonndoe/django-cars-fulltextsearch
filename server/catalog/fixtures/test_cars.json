@@ -27,11 +27,23 @@
     "model": "catalog.Car",
     "fields": {
       "country": "France",
+      "description": "A creamy wine with full Chardonnay flavors.",
+      "id": "000bbdff-30fc-4897-81c1-7947e11e6d1a",
+      "points": 89,
+      "price": 33.00,
+      "variety": "Sport coupe",
+      "model": "Volvo Car"
+    }
+  },
+  {
+    "model": "catalog.Car",
+    "fields": {
+      "country": "France",
       "description": "A spicy, toasty, fruity car.",
       "id": "0082f217-3300-405b-abc6-3adcbecffd67",
       "points": 90,
       "price": 43.00,
-      "variety": "Modern car",
+      "variety": "Modern car Chardonnay",
       "model": "Mini cooper"
     }
   }
