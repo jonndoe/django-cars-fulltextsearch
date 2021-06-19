@@ -13,6 +13,7 @@ class CarAdmin(admin.ModelAdmin):
         "price",
         "variety",
         "model",
+        "search_vector",
     )
     list_display = (
         "id",
