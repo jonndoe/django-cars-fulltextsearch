@@ -1,4 +1,5 @@
 from rest_framework.test import APIClient, APITestCase
+from django.contrib.postgres.search import SearchVector
 
 from catalog.models import Car
 from catalog.serializers import CarSerializer
@@ -8,6 +9,12 @@ class ViewTests(APITestCase):
     fixtures = ["test_cars.json"]
 
     def setUp(self):
+        Car.objects.all().update(search_vector=(
+            SearchVector('variety', weight='A') +
+            SearchVector('model', weight='A') +
+            SearchVector('description', weight='B')
+        ))
+
         self.client = APIClient()
 
     def test_empty_query_returns_everything(self):
@@ -74,3 +81,14 @@ class ViewTests(APITestCase):
             ],
             [item["id"] for item in response.data],
         )
+
+    def test_search_vector_populated_on_save(self):
+        car = Car.objects.create(
+            country='US',
+            points=80,
+            price=1.99,
+            variety='Pinot Grigio',
+            model='Charles Shaw'
+        )
+        car = Car.objects.get(id=car.id)
+        self.assertEqual("'charl':3A 'grigio':2A 'pinot':1A 'shaw':4A", car.search_vector)
