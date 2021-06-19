@@ -1,4 +1,6 @@
+from django.contrib.postgres.search import SearchQuery, SearchVector
 from django.db.models import Q
+
 from django_filters.rest_framework import CharFilter, FilterSet
 
 from .models import Car
@@ -9,11 +11,11 @@ class CarFilterSet(FilterSet):
 
     def filter_query(self, queryset, name, value):
         search_query = Q(
-            Q(variety__search=value)
-            | Q(model__search=value)
-            | Q(description__search=value)
+            Q(search_vector=SearchQuery(value))
         )
-        return queryset.filter(search_query)
+        return queryset.annotate(
+            search_vector=SearchVector('variety', 'model', 'description')
+        ).filter(search_query)
 
     class Meta:
         model = Car
