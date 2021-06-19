@@ -9,9 +9,9 @@ class CarFilterSet(FilterSet):
 
     def filter_query(self, queryset, name, value):
         search_query = Q(
-            Q(variety__contains=value)
-            | Q(model__contains=value)
-            | Q(description__contains=value)
+            Q(variety__search=value)
+            | Q(model__search=value)
+            | Q(description__search=value)
         )
         return queryset.filter(search_query)
 
