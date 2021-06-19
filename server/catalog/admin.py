@@ -13,6 +13,7 @@ class CarAdmin(admin.ModelAdmin):
         "price",
         "variety",
         "model",
+
     )
     list_display = (
         "id",
@@ -21,6 +22,7 @@ class CarAdmin(admin.ModelAdmin):
         "price",
         "variety",
         "model",
+
     )
     list_filter = (
         "country",
