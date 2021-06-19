@@ -1,0 +1,38 @@
+[
+  {
+    "model": "catalog.Car",
+    "fields": {
+      "country": "US",
+      "description": "A very fast and safe car",
+      "id": "58ba903f-85ff-45c2-9bac-6d0732544841",
+      "points": 90,
+      "price": 100.00,
+      "variety": "sport sedan",
+      "model": "Mersedes Benz CLS"
+    }
+  },
+  {
+    "model": "catalog.Car",
+    "fields": {
+      "country": "US",
+      "description": "Another good car.",
+      "id": "21e40285-cec8-417c-9a26-4f6748b7fa3a",
+      "points": 87,
+      "price": 18.00,
+      "variety": "Family Van",
+      "model": "Toyota Allphard"
+    }
+  },
+  {
+    "model": "catalog.Car",
+    "fields": {
+      "country": "France",
+      "description": "A spicy, toasty, fruity car.",
+      "id": "0082f217-3300-405b-abc6-3adcbecffd67",
+      "points": 90,
+      "price": 43.00,
+      "variety": "Modern car",
+      "model": "Mini cooper"
+    }
+  }
+]
