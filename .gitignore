@@ -6,4 +6,4 @@ htmlcov
 .coverage
 .idea
 cars.json
-server/static
+server/static/*
