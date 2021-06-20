@@ -1,7 +1,7 @@
 from rest_framework.test import APIClient, APITestCase
 from django.contrib.postgres.search import SearchVector
 
-from catalog.models import Car
+from catalog.models import Car, CarSearchWord
 from catalog.serializers import CarSerializer
 
 
@@ -97,3 +97,24 @@ class ViewTests(APITestCase):
     def test_description_highlights_matched_words(self):
         response = self.client.get('/api/v1/catalog/cars/?query=car')
         self.assertEquals('A spicy, toasty, fruity <mark>car</mark>.', response.data[0]['description'])
+
+    def test_car_search_words_populated_on_save(self):
+        CarSearchWord.objects.all().delete()
+        Car.objects.create(
+            country='US',
+            description='A cheap, but inoffensive car.',
+            points=80,
+            price=1.99,
+            variety='Pinot Grigio',
+            model='BMW m5'
+        )
+        car_search_words = CarSearchWord.objects.all().order_by('word').values_list('word', flat=True)
+        self.assertListEqual([
+            'a',
+            'bmw',
+            'but',
+            'car',
+            'cheap',
+            'inoffensive',
+            'm5',
+        ], list(car_search_words))

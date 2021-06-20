@@ -1,4 +1,5 @@
 from django.contrib.postgres.search import SearchVector
+from django.db import connection
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -15,3 +16,14 @@ def on_car_save(sender, instance, *args, **kwargs):
         SearchVector('model', weight='A') +
         SearchVector('description', weight='B')
     ))
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            INSERT INTO catalog_carsearchword (word)
+            SELECT word FROM ts_stat('
+              SELECT to_tsvector(''simple'', model) ||
+                     to_tsvector(''simple'', coalesce(description, ''''))
+                FROM catalog_car
+               WHERE id = '%s'
+            ')
+            ON CONFLICT (word) DO NOTHING;
+        """, [str(instance.id),])
