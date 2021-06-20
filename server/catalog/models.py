@@ -44,3 +44,10 @@ class SearchHeadline(models.Func):
     function = 'ts_headline'
     output_field = models.TextField()
     template = '%(function)s(%(expressions)s, \'StartSel = <mark>, StopSel = </mark>, HighlightAll=TRUE\')'
+
+
+class CarSearchWord(models.Model):
+    word = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.word

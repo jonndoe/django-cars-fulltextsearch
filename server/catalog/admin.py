@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Car
+from .models import Car, CarSearchWord
 
 
 @admin.register(Car)
@@ -30,3 +30,10 @@ class CarAdmin(admin.ModelAdmin):
     )
     ordering = ("variety",)
     readonly_fields = ("id",)
+
+
+@admin.register(CarSearchWord)
+class CarSearchWordAdmin(admin.ModelAdmin):
+    fields = ('word',)
+    list_display = ('word',)
+    ordering = ('word',)
