@@ -4,8 +4,8 @@ import { Formik } from 'formik';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 
 function Search ({ search }) {
-  const onSubmit = (values, actions) => {
-    search(values.query);
+  const onSubmit = async (values, actions) => {
+    await search(values.query);
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 import './App.css';
 
 import { Col, Container, Row } from 'react-bootstrap';
@@ -12,18 +12,19 @@ function App () {
 
   const [results, setResults] = useState([]);
 
-  const search = query => {
-    setResults([
-      {
-        id: 'ecf8760a-d139-4d63-83bc-6ddbac9f87dc',
-        country: 'US',
-        description: 'A youthful, exciting car that offers plenty of earth and cassis.',
-        points: 92,
-        price: '65.00',
-        variety: 'Cabernet Sauvignon',
-        model: 'Staglin'
-      }
-    ]);
+  const search = async (query) => {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8003/api/v1/catalog/cars/',
+        params: {
+          query: query
+        }
+      });
+      setResults(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
