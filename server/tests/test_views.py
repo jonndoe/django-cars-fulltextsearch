@@ -91,7 +91,6 @@ class ViewTests(APITestCase):
             model='Charles Shaw'
         )
         car = Car.objects.get(id=car.id)
-        print('--------------------', Car.search_vector)
         self.assertEqual("'charl':3A 'grigio':2A 'pinot':1A 'shaw':4A", car.search_vector)
 
     def test_description_highlights_matched_words(self):
@@ -118,3 +117,14 @@ class ViewTests(APITestCase):
             'inoffensive',
             'm5',
         ], list(car_search_words))
+
+    def test_suggests_words_for_spelling_mistakes(self):
+        CarSearchWord.objects.bulk_create([
+            CarSearchWord(word='pinot'),
+            CarSearchWord(word='grigio'),
+            CarSearchWord(word='noir'),
+            CarSearchWord(word='merlot'),
+        ])
+        response = self.client.get('/api/v1/catalog/car-search-words/?query=greegio')
+        self.assertEqual(1, len(response.data))
+        self.assertEqual('grigio', response.data[0]['word'])

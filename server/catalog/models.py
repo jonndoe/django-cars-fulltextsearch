@@ -56,5 +56,7 @@ class CarSearchWordQuerySet(models.query.QuerySet):
 class CarSearchWord(models.Model):
     word = models.CharField(max_length=255, unique=True)
 
+    objects = CarSearchWordQuerySet.as_manager()
+
     def __str__(self):
         return self.word

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Car
+from .models import Car, CarSearchWord
 
 
 # This code tells the server how to serialize a Car resource
@@ -37,3 +37,10 @@ class CarSerializer(serializers.ModelSerializer):
             "variety",
             "model",
         )
+
+class CarSearchWordSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CarSearchWord
+        fields = ('word',)
+
