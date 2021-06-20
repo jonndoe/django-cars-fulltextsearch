@@ -1,7 +1,7 @@
 import uuid
 
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVectorField
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVectorField, TrigramSimilarity
 from django.db import models
 from django.db.models import F, Q
 
@@ -44,6 +44,13 @@ class SearchHeadline(models.Func):
     function = 'ts_headline'
     output_field = models.TextField()
     template = '%(function)s(%(expressions)s, \'StartSel = <mark>, StopSel = </mark>, HighlightAll=TRUE\')'
+
+
+class CarSearchWordQuerySet(models.query.QuerySet):
+    def search(self, query):
+        return self.annotate(
+            similarity=TrigramSimilarity('word', query)
+        ).filter(similarity__gte=0.3).order_by('-similarity')
 
 
 class CarSearchWord(models.Model):
