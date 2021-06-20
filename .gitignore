@@ -6,3 +6,4 @@ htmlcov
 .coverage
 .idea
 cars.json
+static

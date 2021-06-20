@@ -1,8 +1,22 @@
 import uuid
 
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVectorField
 from django.db import models
+from django.db.models import F, Q
+
+
+class CarQuerySet(models.query.QuerySet):
+
+    def search(self, query):
+        search_query = Q(Q(search_vector=SearchQuery(query)))
+        # return highlighted results
+        return self.annotate(
+            variety_headline=SearchHeadline(F('variety'), SearchQuery(query)),
+            model_headline=SearchHeadline(F('model'), SearchQuery(query)),
+            description_headline=SearchHeadline(F('description'), SearchQuery(query)),
+            search_rank=SearchRank(F('search_vector'), SearchQuery(query))
+        ).filter(search_query).order_by('-search_rank', 'id')
 
 
 class Car(models.Model):
@@ -16,6 +30,8 @@ class Car(models.Model):
     # Add a new search_vector field to catalog_car database table with a tsvector datatype.
     search_vector = SearchVectorField(null=True, blank=True)
 
+    objects = CarQuerySet.as_manager()
+
     # Add a GIN index on the search_vector field to make queries much faster
     class Meta:
         indexes = [GinIndex(fields=["search_vector"], name="search_vector_index")]
@@ -26,5 +42,5 @@ class Car(models.Model):
 
 class SearchHeadline(models.Func):
     function = 'ts_headline'
-    _output_field = models.TextField()
+    output_field = models.TextField()
     template = '%(function)s(%(expressions)s, \'StartSel = <mark>, StopSel = </mark>, HighlightAll=TRUE\')'

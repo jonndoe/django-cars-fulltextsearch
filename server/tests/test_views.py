@@ -91,8 +91,9 @@ class ViewTests(APITestCase):
             model='Charles Shaw'
         )
         car = Car.objects.get(id=car.id)
+        print('--------------------', Car.search_vector)
         self.assertEqual("'charl':3A 'grigio':2A 'pinot':1A 'shaw':4A", car.search_vector)
 
     def test_description_highlights_matched_words(self):
         response = self.client.get('/api/v1/catalog/cars/?query=car')
-        self.assertEquals('A spicy, toasty, fruity <mark>car</mark>', response.data[0]['description'])
+        self.assertEquals('A spicy, toasty, fruity <mark>car</mark>.', response.data[0]['description'])
