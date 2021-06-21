@@ -11,7 +11,8 @@ it('Displays a list of results.', function () {
   cy.visit('/');
   cy.get('input#country').type('US');
   cy.get('input#points').type('92');
-  cy.get('input#query').type('cabernet');
+
+  cy.get('input[placeholder="Enter a search term (e.g. cabernet)"]').type('cabernet');
   cy.get('button').contains('Search').click();
   cy.wait('@getCars');
   cy.get('div.card-title').should('contain', 'Cabernet Sauvignon');
