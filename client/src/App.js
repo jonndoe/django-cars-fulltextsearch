@@ -12,13 +12,15 @@ function App () {
 
   const [results, setResults] = useState([]);
 
-  const search = async (query) => {
+  const search = async (country, points, query) => {
     try {
       const response = await axios({
         method: 'get',
         url: 'http://localhost:8003/api/v1/catalog/cars/',
         params: {
-          query: query
+          country,
+          points,
+          query
         }
       });
       setResults(response.data);
