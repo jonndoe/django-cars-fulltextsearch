@@ -32,5 +32,18 @@ services:
       - 8003:8000
     volumes:
       - ./server:/usr/src/app
+
+  client:
+    build:
+      context: ./client
+    command: [ "npm", "start" ]
+    container_name: car-client
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/usr/src/app
+
 volumes:
   car-database:

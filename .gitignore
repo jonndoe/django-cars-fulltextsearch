@@ -6,7 +6,7 @@ htmlcov
 .coverage
 .idea
 server/catalog/fixtures/cars.json
-server/static/*
+server/static/
 client/package-lock.json
 client/package.json
-client/.eslintcache
+client/.eslintcache/
