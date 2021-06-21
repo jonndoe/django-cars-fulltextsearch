@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import axios from "axios";
 import { Formik } from 'formik';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 
 function Search ({ search }) {
+  const [isLoading, setLoading] = useState(false);
+  const [options, setOptions] = useState([]);
+
+  const carSearchWord = async query => {
+    if (query.length < 3) {
+      setLoading(false);
+      setOptions([]);
+    } else {
+      setLoading(true);
+      try {
+        const response = await axios({
+          method: 'get',
+          url: 'http://localhost:8003/api/v1/catalog/car-search-words/',
+          params: {
+            query: query
+          }
+        });
+        setOptions(response.data);
+      } catch(error) {
+        console.error(error);
+        setOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const onSubmit = async (values, actions) => {
     await search(
       values.country,
@@ -24,6 +53,7 @@ function Search ({ search }) {
       {({
         handleChange,
         handleSubmit,
+        setFieldValue,
         values
       }) => (
         <Form noValidate onSubmit={handleSubmit}>
@@ -63,12 +93,22 @@ function Search ({ search }) {
           <Form.Group controlId='query'>
             <Form.Label>Query</Form.Label>
             <Col>
-              <Form.Control
-                type='text'
-                name='query'
-                placeholder='Enter a search term (e.g. cabernet)'
+              <AsyncTypeahead
+                filterBy={() => true}
+                id="query"
+                isLoading={isLoading}
+                labelKey="word"
+                name="query"
+                onChange={selected => {
+                  const value = selected.length > 0 ? selected[0].word : '';
+                  setFieldValue('query', value);
+                }}
+                onInputChange={value => setFieldValue('query', value)}
+                onSearch={carSearchWord}
+                options={options}
+                placeholder="Enter a search term (e.g. cabernet)"
+                type="text"
                 value={values.query}
-                onChange={handleChange}
               />
               <Form.Text className='text-muted'>
                 Searches for query in variety, model, and description.

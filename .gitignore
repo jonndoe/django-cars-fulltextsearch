@@ -5,5 +5,8 @@ node_modules
 htmlcov
 .coverage
 .idea
-cars.json
+server/catalog/fixtures/cars.json
 server/static/*
+client/package-lock.json
+client/package.json
+client/.eslintcache

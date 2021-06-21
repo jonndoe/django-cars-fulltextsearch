@@ -16,3 +16,17 @@ it('Displays a list of results.', function () {
   cy.wait('@getCars');
   cy.get('div.card-title').should('contain', 'Cabernet Sauvignon');
 });
+
+it('Displays car search words.', function () {
+  // Stub server
+  cy.intercept(
+    'GET', '**/api/v1/catalog/car-search-words/**',
+    { fixture: 'car_search_words.json' }
+  ).as('getCarSearchWords');
+
+  cy.visit('/');
+  cy.get('input[placeholder="Enter a search term (e.g. cabernet)"]')
+    .type('cabarnet');
+  cy.wait('@getCarSearchWords');
+  cy.get('div#query').should('contain', 'cabernet');
+});
