@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+
+  database:
+    container_name: car-database
+    environment:
+      - POSTGRES_DB=car
+      - POSTGRES_USER=car
+      - POSTGRES_PASSWORD=car
+    image: postgres:13-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - car-database:/var/lib/postgresql/data
+
+  elasticsearch:
+    container_name: car-elasticsearch
+    environment:
+      # Set the minimum and maximum heap size to 2 GB
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      # Disable swapping memory to disk
+      - bootstrap.memory_lock=true
+      # Use a single node (for local development)
+      - discovery.type=single-node
+    image: elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+    # For storing the Elasticsearch indexes
+    volumes:
+      - car-elasticsearch:/usr/share/elasticsearch/data
+
+  server:
+    build:
+      context: ./server
+    container_name: car-server
+    depends_on:
+      - database
+      - elasticsearch
+    environment:
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=car
+      - SQL_USER=car
+      - SQL_PASSWORD=car
+      - SQL_HOST=car-database
+      - SQL_PORT=5432
+      - ES_HOSTS=http://car-elasticsearch:9200
+    command: [ "bash", "start.sh" ]
+    ports:
+      - 8003:8000
+    volumes:
+      - ./server:/usr/src/app
+
+  client:
+    build:
+      context: ./client
+    command: [ "npm", "start" ]
+    container_name: car-client
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/usr/src/app
+
+volumes:
+  car-database:
+  car-elasticsearch:
